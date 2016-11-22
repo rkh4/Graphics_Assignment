@@ -92,7 +92,7 @@ scene.add(controls.getObject());
 //-------------------------------------------------------------
 //--------------------------LIGHTS-----------------------------
 //-------------------------------------------------------------
-var ambLight = new THREE.AmbientLight(0xffffff, 0.5);
+var ambLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambLight);
 
 var porchLight = new THREE.SpotLight(0xffffff, 2);
@@ -109,13 +109,13 @@ scene.add(porchLight, slHelper);
 
 
 var studyLight = new THREE.SpotLight(0xffffff, 2);
-studyLight.position.set(55,20,40);
+studyLight.position.set(55,24,40);
 studyLight.castShadow = true;
 studyLight.target.position.set(55,0,40);
 studyLight.target.updateMatrixWorld();
 studyLight.penumbra = 0.5;
 studyLight.distance = 100;
-studyLight.angle = 1.2;
+studyLight.angle = 1.4;
 var helper01 = new THREE.SpotLightHelper(studyLight);
 scene.add(studyLight, helper01);
 
@@ -178,10 +178,28 @@ scene.add(studyDoor);
 // Living room to front corridor
 var livingRoomDoor1 = new THREE.Mesh(new THREE.CubeGeometry(12, 20, 1).translate(5.5,0,0), new THREE.MeshPhongMaterial({color:0xff6633}));
 livingRoomDoor1.position.set(16, 10, 49.5);
+livingRoomDoor1.castShadow = true;
 livingRoomDoor1.receiveShadow = true;
 doors.push(livingRoomDoor1);
 scene.add(livingRoomDoor1);
 
+//Dining room door
+var diningRoomDoor = new THREE.Mesh(new THREE.CubeGeometry(12, 20, 1).translate(5.5,0,0), new THREE.MeshPhongMaterial({color:0xff6633}));
+diningRoomDoor.rotation.y += Math.PI * 90/180;
+diningRoomDoor.position.set(-20, 10, 48.5);
+diningRoomDoor.castShadow = true;
+diningRoomDoor.receiveShadow = true;
+doors.push(diningRoomDoor);
+scene.add(diningRoomDoor);
+
+//Downstairs toilet door
+var toiletDoor = new THREE.Mesh(new THREE.CubeGeometry(12, 20, 1).translate(5.5,0,0), new THREE.MeshPhongMaterial({color:0xff6633}));
+toiletDoor.rotation.y += Math.PI * 270/180;
+toiletDoor.position.set(-20, 10, 10);
+toiletDoor.castShadow = true;
+toiletDoor.receiveShadow = true;
+doors.push(toiletDoor);
+scene.add(toiletDoor);
 
 
 //==================WALLS====================
@@ -199,21 +217,26 @@ var wallMat = new THREE.MeshFaceMaterial([
               ]);
 var frontWallLeft = new THREE.Mesh(wallGeo, wallMat);
 frontWallLeft.castShadow = true;
+frontWallLeft.receiveShadow = true;
 frontWallLeft.position.set(-43,12,80);
 var frontWallRight = frontWallLeft.clone();
 frontWallRight.position.x += 86;
+frontWallRight.castShadow = true;
+frontWallRight.receiveShadow = true;
 scene.add(frontWallLeft, frontWallRight);
 
 //Right Outdoor Wall
 var rightSideWall = new THREE.Mesh(new THREE.CubeGeometry(161, 24, 2), wallMat);
 rightSideWall.position.set(80, 12, 0.5);
 rightSideWall.rotation.y = Math.PI * 90/180;
+rightSideWall.castShadow = true;
+rightSideWall.receiveShadow = true;
 scene.add(rightSideWall);
 
 
 //Dining room to Utility wall
 var wall01 = new THREE.Mesh(new THREE.CubeGeometry(60, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
-wall01.position.set(-50, 12, 30);
+wall01.position.set(-50, 12, 29.5);
 wall01.castShadow = true;
 scene.add(wall01);
 
@@ -228,8 +251,10 @@ var wall03 = new THREE.Mesh(new THREE.CubeGeometry(50, 24, 1), new THREE.MeshPho
 wall03.rotation.y = Math.PI * 90/180;
 wall03.position.set(32.5,12,35);
 wall03.castShadow = true;
+wall03.receiveShadow = true;
 var wall03Pt2 = new THREE.Mesh(new THREE.CubeGeometry(7, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff})); 
 wall03Pt2.position.set(-40.5, 0, 0);
+wall03Pt2.castShadow = true;
 wall03Pt2.receiveShadow = true;
 wall03.add(wall03Pt2);
 scene.add(wall03);
@@ -239,18 +264,44 @@ var wall04 = new THREE.Mesh(new THREE.CubeGeometry(130, 24, 1), new THREE.MeshPh
 wall04.rotation.y = Math.PI * 90/180;
 wall04.position.set(15, 12, -15);
 wall04.castShadow = true;
+wall04.receiveShadow = true;
 var wall04Pt2 = new THREE.Mesh(new THREE.CubeGeometry(5, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff})); 
 wall04Pt2.position.set(30,12,49.5);
 wall04Pt2.castShadow = true;
 wall04Pt2.receiveShadow = true;
 scene.add(wall04, wall04Pt2);
 
-wall05 = new THREE.Mesh(new THREE.CubeGeometry(30, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+//dining room to hallway
+var wall05 = new THREE.Mesh(new THREE.CubeGeometry(30, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
 wall05.rotation.y = Math.PI * 90/180;
 wall05.position.set(-20,12,64);
 wall05.castShadow = true;
-wall05.receiveShadow = true;   
+wall05.receiveShadow = true;
+var wall05pt2 = new THREE.Mesh(new THREE.CubeGeometry(8, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+wall05pt2.position.set(31, 0, 0);
+var wall05pt3 = new THREE.Mesh(new THREE.CubeGeometry(12, 4, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+wall05pt3.position.set(21, 10, 0);
+wall05.add(wall05pt2, wall05pt3);
 scene.add(wall05);
+
+//kitchen to utility/ toilet
+var wall06 = new THREE.Mesh(new THREE.CubeGeometry(60, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+wall06.position.set(-50, 12, -10);
+wall05.castShadow = true;
+wall05.receiveShadow = true;
+scene.add(wall06);
+
+//toilet to hallway
+var wall07 = new THREE.Mesh(new THREE.CubeGeometry(20, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+wall07.rotation.y += Math.PI * 90/180;
+wall07.position.set(-20, 12, -0.5);
+var wall07pt2 = new THREE.Mesh(new THREE.CubeGeometry(8, 24, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+wall07pt2.position.set(-26, 0, 0);
+var wall07pt3 = new THREE.Mesh(new THREE.CubeGeometry(12, 4, 1), new THREE.MeshPhongMaterial({color:0xffffff}));
+wall07pt3.position.set(-16, 10, 0);
+wall07.add(wall07pt2, wall07pt3);
+scene.add(wall07);
+
 
 //==================MISC====================
 
