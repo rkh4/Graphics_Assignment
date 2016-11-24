@@ -110,6 +110,8 @@ studyLight.position.set(55,24,40);
 studyLight.castShadow = true;
 studyLight.target.position.set(55,0,40);
 studyLight.target.updateMatrixWorld();
+studyLight.shadowMapWidth = 2048;
+studyLight.shadowMapHeight = 2048;
 var helper01 = new THREE.SpotLightHelper(studyLight);
 scene.add(studyLight, helper01);
 
@@ -382,6 +384,12 @@ function loadOBJ(address, xPos, yPos, zPos, color, scale, rotation){
     });
     
 }
+
+//Study
+//loadOBJ('objects/toilet.obj', 50, 0, 60, 0xffff00, 0.01, 0);
+loadOBJ('objects/bookshelf.obj', 33, 0, 18, 0x00ff00, 2.5, 90);
+loadOBJ('objects/pc.obj', 75, 10, 40, 0x00ff00, 0.1, 270);
+loadOBJ('objects/officeChair.obj', 60, 9, 35, 0x00ff00, 0.02, 60);
 
 loadOBJ('objects/banana.obj', -20, 10, -40, 0xffff00, 0.01, 0);
 loadOBJ('objects/sofa.obj', 56, 0, 2, 0xff6633, 0.12, 180);
