@@ -420,10 +420,10 @@ scene.add(stairs);
 
 var counterMaterial = new THREE.MeshFaceMaterial([
                 new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/cupboard_front.png')}), //right
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/crate.jpg')}), //left
+                new THREE.MeshPhongMaterial({color:0xf5f1de}), //left
                 new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/cupboard_top.png')}), //top
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}), //bottom
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}), //Front
+                new THREE.MeshPhongMaterial({color:0xf5f1de}), //bottom
+                new THREE.MeshPhongMaterial({color:0xf5f1de}), //Front
                 new THREE.MeshPhongMaterial({color:0xf5f1de}) //Back
               ]);
 
