@@ -417,8 +417,18 @@ var st12 = stairs.clone(); st12.position.set(0,22,-48);
 stairs.add(st1, st2, st3, st4, st5, st6, st7, st8, st9, st10, st11, st12);
 scene.add(stairs);
 
+
+var counterMaterial = new THREE.MeshFaceMaterial([
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/cupboard_front.png')}), //right
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/crate.jpg')}), //left
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/cupboard_top.png')}), //top
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}), //bottom
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}), //Front
+                new THREE.MeshPhongMaterial({color:0xf5f1de}) //Back
+              ]);
+
 //Kitchen
-var kitchenCounter = new THREE.Mesh(new THREE.CubeGeometry(10,10,30.5),  new THREE.MeshPhongMaterial({color:0x0099CC}));
+var kitchenCounter = new THREE.Mesh(new THREE.CubeGeometry(10,10,30.5),  counterMaterial);
 kitchenCounter.position.set(-75, 5, -25.5);
 var counter02 = new THREE.Mesh(new THREE.CubeGeometry(10,10,28),  new THREE.MeshPhongMaterial({color:0x0099CC}));
 counter02.position.set(0,0,-40);
