@@ -15,6 +15,7 @@ var KeysPressed = [];
 //PointerLockControls
 var blocker = document.getElementById('blocker');
 var instructions = document.getElementById( 'instructions' );
+var interact = document.getElementById( 'interact' );
 var controlsEnabled = false;
 
 //Raycaster
@@ -144,8 +145,8 @@ var helper03 = new THREE.SpotLightHelper(diningLight);
 scene.add(diningLight);
 
 var toiletLight = hallwayLight.clone();
-toiletLight.position.set(-30, 24, 12);
-toiletLight.target.position.set(-30, 0, 12);
+toiletLight.position.set(-50, 24, 12);
+toiletLight.target.position.set(-50, 0, 12);
 toiletLight.target.updateMatrixWorld();
 toiletLight.shadowMapWidth = 4096;
 toiletLight.shadowMapHeight = 4096;
@@ -184,13 +185,42 @@ scene.add(kitchenLight);
 
 //==================FLOORS====================
 
-//Bottom Floor
-var pGeo = new THREE.PlaneGeometry(160, 162, 5, 8);
-var pMat = new THREE.MeshPhongMaterial({color: 0x005567, side: THREE.DoubleSide});
-var bottomFloor = new THREE.Mesh(pGeo, pMat);
+//Floor Textures
+var floorTexture = THREE.ImageUtils.loadTexture('images/carpet3.jpg');
+floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+floorTexture.repeat.set(10,10);
+
+var tileTexture = THREE.ImageUtils.loadTexture('images/tile.png');
+tileTexture.wrapS = tileTexture.wrapT = THREE.RepeatWrapping;
+tileTexture.repeat.set(10,6);
+
+var bathTileTexture = THREE.ImageUtils.loadTexture('images/bathroomTile.png');
+bathTileTexture.wrapS = bathTileTexture.wrapT = THREE.RepeatWrapping;
+bathTileTexture.repeat.set(25,15);
+
+//Main carpetted floor
+var floorGeo = new THREE.PlaneGeometry(160, 162, 5, 8);
+//var pMat = new THREE.MeshPhongMaterial({color: 0x005567, side: THREE.DoubleSide});
+var floorMat = new THREE.MeshPhongMaterial({map: floorTexture, side: THREE.DoubleSide});
+var bottomFloor = new THREE.Mesh(floorGeo, floorMat);
 bottomFloor.rotation.x = Math.PI * 90 / 180;
 bottomFloor.receiveShadow = true;
-scene.add(bottomFloor);
+
+//Kitchen Floor
+var kitchenFloor = new THREE.Mesh(new THREE.PlaneGeometry(95, 70, 5, 8), new THREE.MeshPhongMaterial({map: tileTexture, side: THREE.DoubleSide, shininess: 50}));
+kitchenFloor.position.set(-32, 0.1, -45);
+kitchenFloor.rotation.x = Math.PI * 90 / 180;
+kitchenFloor.receiveShadow = true;
+
+//Bathroom Floor
+var bathroomFloor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40, 5, 8), new THREE.MeshPhongMaterial({map: bathTileTexture, side: THREE.DoubleSide, shininess: 50}));
+bathroomFloor.position.set(-50, 0.1, 10);
+bathroomFloor.rotation.x = Math.PI * 90 / 180;
+bathroomFloor.receiveShadow = true;
+
+scene.add(bottomFloor, kitchenFloor, bathroomFloor);
+
+
 
 //==================DOORS====================
 
@@ -219,14 +249,12 @@ frontLeft.open = "closed";
 doors.push(frontLeft);
 
 var doorMaterial = new THREE.MeshFaceMaterial([
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door_side.png')}),
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door_side.png')}),
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door_side.png')}),
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door_side.png')}),
-                //new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door_front.png')}), //Front
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/testDoor.png')}), //Front
-                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/testDoor.png')}) //Back
-                //new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door_back.png')}) //Back
+                new THREE.MeshPhongMaterial({color: 0xffffff}),
+                new THREE.MeshPhongMaterial({color: 0xffffff}),
+                new THREE.MeshPhongMaterial({color: 0xffffff}),
+                new THREE.MeshPhongMaterial({color: 0xffffff}),
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/door.png')}), //Front
+                new THREE.MeshPhongMaterial({map:THREE.ImageUtils.loadTexture('images/doorFlip.png')}) //Back
               ]);
 
 //Study Door [1]
@@ -270,15 +298,25 @@ doors.push(kitchen01);
 
 //==================WALLS====================
 
-//var wallMat = new THREE.MeshPhongMaterial({color: 0xff6633});
+var wallTexture = THREE.ImageUtils.loadTexture('images/wallPlaster.jpg');
+wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
+wallTexture.repeat.set(6,2);
+
 var outerWallMat = new THREE.MeshFaceMaterial([
-                new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
-                new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
-                new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
-                new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
-                new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}), //Front
-                new THREE.MeshPhongMaterial({color:0xf5f1de}) //Back
-              ]);
+                        new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
+                        new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
+                        new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
+                        new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}),
+                        new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('images/bricks.jpg')}), //Front
+                        new THREE.MeshPhongMaterial({map: wallTexture}) //Back
+                    ]);
+
+/*var wallTexture = THREE.ImageUtils.loadTexture('images/bricks.jpg');
+wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
+wallTexture.repeat.set(2,2);
+
+var outerWallMat = new THREE.MeshBasicMaterial({map: wallTexture});*/
+
 
 //Front-left outside wall
 var frontWallLeft = new THREE.Mesh(new THREE.CubeGeometry(15,24,2), outerWallMat);
@@ -341,18 +379,18 @@ rightSideWall.rotation.y = Math.PI * 90/180;
 
 
 //Inside wall Material
-var wallMaterial = new THREE.MeshPhongMaterial({color:0xf5f1de});
+var wallMaterial = new THREE.MeshPhongMaterial({map: wallTexture})
 
 //Dining room to Bathroom wall
 var wall01 = new THREE.Mesh(new THREE.CubeGeometry(59, 24, 1), wallMaterial);
 wall01.position.set(-50, 12, 29.5);
 
-//Study to Living room wall
+//Bedroom to Living room wall
 var wall02 = wall01.clone();
 wall02.scale.x = 0.8;
-wall02.position.set(56,12,10);
+wall02.position.set(56,12,10.5);
 
-//Study to hallway wall
+//Bedroom to hallway wall
 var wall03 = new THREE.Mesh(new THREE.CubeGeometry(50, 24, 1), wallMaterial); 
 wall03.rotation.y = Math.PI * 90/180;
 wall03.position.set(32.5,12,35);
@@ -478,6 +516,32 @@ scene.add(kitchenCounter);
 
 
 
+/*function repeatLoad(address, xPos, yPos, zPos, color, scale, rotation, castShadow=true){
+    var loader = new THREE.OBJLoader(new THREE.LoadingManager());
+    loader.load(address, function(object){
+        for (i=0; i < 3 ; i++){  
+            console.log(yPos);
+            object.position.set(xPos,yPos,zPos);
+            object.scale.set(scale, scale, scale);
+            object.rotation.y += Math.PI * rotation /180;
+
+            object.traverse(function(child){
+                if(child instanceof THREE.Mesh){
+                    child.material.color = new THREE.Color(color);
+                    child.castShadow = castShadow;
+                    child.receiveShadow = true;
+                    child.geometry.computeVertexNormals();
+                } 
+            })
+            var temp = object.clone();
+            scene.add(temp);
+            console.log("repeat");
+            yPos += 10;
+        }
+    });
+}*/
+
+
 function loadOBJ(address, xPos, yPos, zPos, color, scale, rotation, castShadow=true){
     
     var loader = new THREE.OBJLoader(new THREE.LoadingManager());
@@ -536,14 +600,14 @@ function loadObject(material, object, xPos, yPos, zPos, rotation, scale, castSha
 
 
 //Bedroom
-loadOBJ('objects/bookshelf.obj', 33, 0, 18, 0x00ff00, 2.5, 90);
+loadObject('chestOfDrawers.mtl','chestOfDrawers.obj', 33, 0, 50, 90, 0.5);
 loadObject('desk.mtl','desk.obj', 55, 7, 75, 180, 0.1);
 loadOBJ('objects/officeChair.obj', 60, 6.5, 65, 0x00ff00, 0.015, -30);
 loadObject('bed.mtl','bed.obj', 52, 0, 12, 0, 1);
 
 //Living Room
-loadObject('3SeatSofa.mtl','3SeatSofa.obj', 72, 0, 5, 180, 0.9);
-loadObject('3SeatSofa.mtl','3SeatSofa.obj', 20, 0, -20, 90, 0.9);
+loadObject('3sofa.mtl','3sofa.obj', 72, 0, 5.5, 180, 0.9);
+loadObject('2sofa.mtl','2sofa.obj', 20, 0, -20, 90, 0.9);
 loadObject('tvStand.mtl','tvStand.obj', 71.5, 0, -64.5, 150, 0.55);
 loadOBJ('objects/TV.obj', 68.5, 4.8, -70, 0x000000, 0.05, 330, false);
 loadObject('coffeeTable.mtl','coffeeTable.obj', 45, -0.5, -30, 90, 0.8);
@@ -555,34 +619,35 @@ scene.add(tvColor);
 
 //Bathroom
 loadOBJ('objects/toilet.obj', -75, 0, 1.1, 0xffffff, 0.4, 0);
-loadOBJ('objects/CornerSink.obj', -19, 7.5, 27.5, 0x00ff00, 0.5, 225);
+loadOBJ('objects/CornerSink.obj', -19, 7.5, 27.5, 0xffffff, 0.5, 225);
 loadObject('bath.mtl','bath.obj', -64, 0, 25, 270, 0.3);
 
 //Dining Room
-loadOBJ('objects/diningTable.obj', -55, 5, 48, 0x00ff00, 0.03, 0);
-/*loadObject('chairTest.mtl','chairTest.obj', -60, 0, 48, 0, 0.05);
-loadObject('chairTest.mtl','chairTest.obj', -70, 0, 55, 85, 0.05);
-loadObject('chairTest.mtl','chairTest.obj', -63, 0, 70, 170, 0.05);
-loadObject('chairTest.mtl','chairTest.obj', -50, 0, 65, 180, 0.05);
-loadObject('chairTest.mtl','chairTest.obj', -26, 0, 70, 220, 0.05);
-loadObject('chairTest.mtl','chairTest.obj', -50, 0, 48, 0, 0.05);*/
+loadObject('tableLegs.mtl','tableLegs.obj', -70, 0, 48, 0, 0.4);
+var tableCounter1 = new THREE.Mesh(new THREE.CubeGeometry(30,1,15), new THREE.MeshPhongMaterial({color: 0xffffff, transparent: true, opacity: 0.7}));
+tableCounter1.position.set(-55.5,10,55);
+tableCounter1.castShadow = true;
+scene.add(tableCounter1);
+loadObject('chair.mtl','chair.obj', -60, 0, 48, 0, 0.7);
+loadObject('chair.mtl','chair.obj', -70, 0, 55, 85, 0.7);
+loadObject('chair.mtl','chair.obj', -63, 0, 70, 170, 0.7);
+loadObject('chair.mtl','chair.obj', -50, 0, 65, 180, 0.7);
+loadObject('chair.mtl','chair.obj', -26, 0, 70, 220, 0.7);
+loadObject('chair.mtl','chair.obj', -50, 0, 48, 0, 0.7);
 
 //Kitchen
-loadObject('oven.mtl', 'oven.obj', -75, 0, -46.35, 90, 0.25);
+loadObject('newOven.mtl', 'newOven.obj', -80, 0, -41.2, 90, 0.3335);
 loadObject('kitchenTableLegs.mtl', 'kitchenTableLegs.obj', -40, 2.5, -30, 0, 0.5);
-var tableCounter = new THREE.Mesh(new THREE.CylinderGeometry(8,8, 0.8, 20), 
+var tableCounter2 = new THREE.Mesh(new THREE.CylinderGeometry(8,8, 0.8, 20), 
                                   new THREE.MeshPhongMaterial({color: 0xffffff, transparent: true, opacity: 0.8}));
-tableCounter.position.set(-40, 8, -30);
-tableCounter.castShadow = true;
-scene.add(tableCounter);
-
-/*loadObject('chairTest.mtl','chairTest.obj', -52, 0, -30, 90, 0.05);
-loadObject('chairTest.mtl','chairTest.obj', -30, 0, -30, 270, 0.05);
+tableCounter2.position.set(-40, 8, -30);
+tableCounter2.castShadow = true;
+scene.add(tableCounter2);
+//loadObject('chair.mtl','chair.obj', -45, 0, -30, 90, 0.7);
+//loadObject('chair.mtl','chair.obj', -52, 0, -30, 90, 0.8);
+/*loadObject('chairTest.mtl','chairTest.obj', -30, 0, -30, 270, 0.05);
 loadObject('chairTest.mtl','chairTest.obj', -40, 0, -20, 180, 0.05);
 loadObject('chairTest.mtl','chairTest.obj', -40, 0, -40, 0, 0.05);*/
-
-var axis = new THREE.AxisHelper(100);
-scene.add(axis);
 
 var stats = new Stats();
 stats.showPanel( 0 );
@@ -592,7 +657,7 @@ document.body.appendChild( stats.dom );
 //-------------------------------------------------------------
 //-------------------------ANIMATION---------------------------
 //-------------------------------------------------------------
-//var door.name = "closed";
+var particles = [];
 
 //Opening and Closing Doors in the house
 function doorInteract(door){
@@ -625,6 +690,37 @@ function doorInteract(door){
     }
 }
 
+function particleRender(context){
+    context.beginPath();
+    context.arc(0, 0, 1, 0, Math.PI*2, true);
+    context.fill();
+}
+
+function makeParticles(){
+    var particle, material;
+    
+    for (var xpos = -100; xpos < 100; xpos+= 2){
+        material = new THREE.ParticleCanvasMaterial({color: 0xffffff, program: particleRender});
+        particle = new THREE.Particle(material);
+        
+        particle.position.z = 0;
+        particle.position.y = 0;
+        particle.position.x = xpos;
+        particle.scale.x = particle.scale.y = 10;
+        scene.add(particle);
+        particles.push(particle);
+    }
+}
+
+function updateParticles(){
+    for (i = 0; i < particles.length; i++){
+        particle = particles[i];
+        particle.position.x += 1;
+        
+        if (particle.position.x > 100) particle.posistion.x -= 200;
+    }
+}
+
 //-------------------------------------------------------------
 //------------------------RENDER-LOOP--------------------------
 //-------------------------------------------------------------
@@ -646,14 +742,20 @@ function RenderLoop(){
     stats.begin();
     renderer.render(scene, camera);
     
+    makeParticles();
+    setInterval(updateParticles, 1000/30);
+    
     //Raycaster update & collision detection
     raycaster.ray.origin.set(controls.getObject().position);
     raycaster.ray.direction.set(controls.getObject().rotation);
     raycaster.setFromCamera(cursorPos, camera);
     var rayCollision = raycaster.intersectObjects(doors);
     
+    interact.style.display = 'none';
+    
     //Interacting with whichever door you are looking at
     for (i = 0; i < rayCollision.length; i++){
+        interact.style.display = 'block';
         if (KeysPressed[69] && doors[rayCollision[i].object.name].name != "moving"){
             doorInteract(rayCollision[i].object.name); 
         }   
